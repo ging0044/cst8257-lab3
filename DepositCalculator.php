@@ -11,7 +11,7 @@
             if ($amount === ""){
                 return "Principal amount is required";
             }
-            if (preg_match("/\d+$/", $amount) === 1) {
+            if (preg_match("/^\d+$/", $amount) === 1) {
                 return "";
             }
             return "Principal amount must be numeric";
@@ -20,7 +20,7 @@
             if ($rate === "") {
                 return "Interest rate is required";
             }
-            if (preg_match("/\d+$/", $rate) === 1){
+            if (preg_match("/^\d+$/", $rate) === 1){
                 return "";
             }
             return "Interest rate must be non-negative numeric";
@@ -29,7 +29,7 @@
             if ($years === "") {
                 return "Years to deposit is required";
             }
-            if (preg_match("/20|1\d|[1-9]$/", $years) === 1) {
+            if (preg_match("/^((20)|(1\d)|(0[1-9])|[1-9])$/", $years) === 1) {
                 return "";
             }
             return "Years to deposit must be numeric and between 1 and 20";
@@ -232,13 +232,13 @@
                         </div>
                         <div class="form-check form-check-inline">
                             <label for="checkAfternoon" class="form-check-label">
-                                <input type="checkbox" name="phoneTime[]" value="afternoon" id="checkAfternoon"class="form-check-input" />
+                                <input type="checkbox" name="phoneTime[]" value="afternoon" id="checkAfternoon" class="form-check-input" />
                                 Afternoon
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
                             <label for="checkEvening" class="form-check-label">
-                                <input type="checkbox" name="phoneTime[]" value="evening" id="checkEvening"class="form-check-input" />
+                                <input type="checkbox" name="phoneTime[]" value="evening" id="checkEvening" class="form-check-input" />
                                 Evening
                             </label>
                         </div>
@@ -295,8 +295,13 @@
     <?php if (!empty($_POST)) : ?>
     <script>
     <?php foreach ($_POST as $field => $value) : ?>
-        <?php if ($value !== "" && $field !== "submit") : ?>
+        <?php if ($value !== "" && $field !== "submit" && $field !== "phoneTime") : ?>
         document.depositCalculator.<?php echo $field; ?>.value = <?php echo '"' . $value . '"'; ?>;
+        <?php endif; ?>
+        <?php if ($value !== array() && $field === "phoneTime") : ?>
+        <?php foreach ($phoneTime as $time) : ?>
+            document.getElementById(<?php echo '"check' . ucfirst($time) . '"'?>).checked = true;
+        <?php endforeach; ?>
         <?php endif; ?>
     <?php endforeach; ?>
     </script>
